@@ -1,7 +1,21 @@
 <template>
   <div class="app">
-    <MySelect v-model="selectedSort" :options="sortOptions" />
+    <div class="select">
+      <MySelect v-model="selectedSort" :options="sortOptions" />
+    </div>
     <CardsGrid :cards="sortedCards"></CardsGrid>
+    <div class="pagination">
+      <div
+        class="pageItem"
+        :class="{ currentPage: page === currentPage }"
+        @click="changePage(page)"
+        :key="page"
+        v-for="page in 20"
+      >
+        {{ page }}
+      </div>
+    </div>
+    <!-- <Pagination :currentPage="currentPage" :pages="pages" /> -->
   </div>
 </template>
 
@@ -9,15 +23,17 @@
 import axios from "axios";
 import CardsGrid from "./components/CardsGrid.vue";
 import MySelect from "./components/UI/MySelect.vue";
+import Pagination from "./components/UI/Pagination.vue";
 
 export default {
-  components: { CardsGrid, MySelect },
+  components: { CardsGrid, MySelect, Pagination },
   data() {
     return {
       cards: [],
       selectedSort: "",
       sortOptions: [{ value: "name" }, { value: "status" }],
       currentPage: 1,
+      pages: 1,
     };
   },
   methods: {
@@ -33,9 +49,13 @@ export default {
         );
         console.log(response.data);
         this.cards = response.data.results;
+        this.pages = response.data.info.pages;
       } catch (e) {
-        alert("Error");
+        alert("My error");
       }
+    },
+    changePage(page) {
+      this.currentPage = page;
     },
   },
   mounted() {
@@ -48,11 +68,35 @@ export default {
       );
     },
   },
+  watch: {
+    currentPage() {
+      this.fetchCards();
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .app {
   background-color: rgb(39, 43, 51);
+}
+
+.pagination {
+  color: rgb(158, 158, 158);
+  display: flex;
+  justify-content: center;
+  flex-flow: row;
+}
+.pageItem {
+  padding: 10px;
+  border: 1px solid rgb(158, 158, 158);
+}
+.currentPage {
+  background-color: white;
+}
+
+.select {
+  display: flex;
+  justify-content: end;
 }
 </style>
