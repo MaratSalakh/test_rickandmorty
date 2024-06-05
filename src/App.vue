@@ -23,10 +23,9 @@
 import axios from "axios";
 import CardsGrid from "./components/CardsGrid.vue";
 import MySelect from "./components/UI/MySelect.vue";
-import Pagination from "./components/UI/Pagination.vue";
 
 export default {
-  components: { CardsGrid, MySelect, Pagination },
+  components: { CardsGrid, MySelect },
   data() {
     return {
       cards: [],
