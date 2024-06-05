@@ -27,7 +27,7 @@
 export default {
   props: {
     card: {
-      type: String,
+      type: Object,
       required: true,
     },
   },
@@ -45,7 +45,7 @@ export default {
   display: flex;
 }
 .secondText {
-  color: lightgrey;
+  color: rgb(158, 158, 158);
 }
 .img {
   max-width: 250px;

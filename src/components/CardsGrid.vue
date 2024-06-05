@@ -1,10 +1,21 @@
 <template>
   <h1 class="title">The Rick and Morty</h1>
-  <div class="cardGrid"><slot></slot></div>
+  <div class="cardGrid">
+    <Card :card="card" v-for="card in cards"></Card>
+  </div>
 </template>
 
 <script>
-export default {};
+import Card from "./UI/Card.vue";
+export default {
+  components: { Card },
+  props: {
+    cards: {
+      type: Array,
+      default: () => [],
+    },
+  },
+};
 </script>
 
 <style scoped>
