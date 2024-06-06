@@ -1,21 +1,26 @@
 <template>
   <div class="app">
-    <div class="select">
+    <h1 class="title">Rick and Morty</h1>
+    <div class="buttons">
       <MySelect v-model="selectedSort" :options="sortOptions" />
+      <button @click="sortingOn">
+        {{ sorting === true ? "Отменить" : "Применить" }}
+      </button>
     </div>
-    <CardsGrid :cards="sortedCards"></CardsGrid>
-    <div class="pagination">
-      <div
-        class="pageItem"
-        :class="{ currentPage: page === currentPage }"
-        @click="changePage(page)"
-        :key="page"
-        v-for="page in 20"
-      >
-        {{ page }}
+    <CardsGrid :cards="sorting === true ? sortedCards : cards"></CardsGrid>
+    <div class="wrap_pagination">
+      <div class="pagination">
+        <div
+          class="pageItem"
+          :class="{ currentPage: page === currentPage }"
+          @click="changePage(page)"
+          :key="page"
+          v-for="page in pages"
+        >
+          {{ page }}
+        </div>
       </div>
     </div>
-    <!-- <Pagination :currentPage="currentPage" :pages="pages" /> -->
   </div>
 </template>
 
@@ -33,6 +38,8 @@ export default {
       sortOptions: [{ value: "name" }, { value: "status" }],
       currentPage: 1,
       pages: 1,
+      sorting: false,
+
     };
   },
   methods: {
@@ -49,12 +56,17 @@ export default {
         console.log(response.data);
         this.cards = response.data.results;
         this.pages = response.data.info.pages;
+        this.allPagesGroups = Math.ceil(response.data.info.pages / this.pagesGroupStep);
       } catch (e) {
         alert("My error");
       }
     },
     changePage(page) {
       this.currentPage = page;
+    },
+    sortingOn() {
+      this.sorting === true ? (this.selectedSort = "") : null;
+      this.sorting = !this.sorting;
     },
   },
   mounted() {
@@ -85,17 +97,42 @@ export default {
   display: flex;
   justify-content: center;
   flex-flow: row;
+  flex-wrap: wrap;
+  padding: 20px;
+  width: 50vw;
+}
+.wrap_pagination {
+  display: flex;
+  justify-content: center;
 }
 .pageItem {
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
   border: 1px solid rgb(158, 158, 158);
+  cursor: pointer;
 }
 .currentPage {
   background-color: white;
 }
 
-.select {
+.buttons {
   display: flex;
   justify-content: end;
+  padding: 10px;
+}
+
+.redButton {
+  background-color: red;
+}
+.greenButton {
+  background-color: green;
+}
+
+.title {
+  margin-left: 10px;
+  color: white;
 }
 </style>

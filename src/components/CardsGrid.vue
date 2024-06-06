@@ -1,5 +1,4 @@
 <template>
-  <h1 class="title">The Rick and Morty</h1>
   <div class="cardGrid">
     <Card :card="card" v-for="card in cards"></Card>
   </div>
@@ -23,9 +22,5 @@ export default {
   display: grid;
   grid-template-columns: 45vw 45vw;
   justify-content: space-evenly;
-}
-.title {
-  margin-left: 10px;
-  color: white;
 }
 </style>
