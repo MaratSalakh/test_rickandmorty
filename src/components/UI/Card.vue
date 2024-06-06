@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div><img class="img" :src="card.image" :alt="card.name" /></div>
+    <div><img :alt="card.name" :src="card.image" class="img" /></div>
     <div class="info">
       <div>
         <h2 class="cardName">{{ card.name }}</h2>
@@ -23,15 +23,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    card: {
-      type: Object,
-      required: true,
-    },
-  },
-};
+<script setup>
+const props = defineProps({ card: Object });
 </script>
 
 <style scoped>
@@ -44,27 +37,33 @@ export default {
 
   display: flex;
 }
+
 .secondText {
   color: rgb(158, 158, 158);
 }
+
 .img {
   max-width: 250px;
   max-height: 250px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
+
 .info {
   display: flex;
   flex-flow: column;
   justify-content: space-around;
   margin-left: 15px;
 }
+
 .content {
   font-size: large;
 }
+
 .cardName {
   font-size: xx-large;
 }
+
 .redDot {
   height: 10px;
   width: 10px;
@@ -72,6 +71,7 @@ export default {
   background-color: red;
   margin-right: 5px;
 }
+
 .greenDot {
   height: 10px;
   width: 10px;
@@ -79,6 +79,7 @@ export default {
   background-color: green;
   margin-right: 5px;
 }
+
 .greyDot {
   height: 10px;
   width: 10px;
@@ -86,6 +87,7 @@ export default {
   background-color: rgb(158, 158, 158);
   margin-right: 5px;
 }
+
 .status {
   display: flex;
   align-items: center;

@@ -1,20 +1,13 @@
 <template>
   <div class="cardGrid">
-    <Card :card="card" v-for="card in cards"></Card>
+    <Card v-for="card in cards" :card="card"></Card>
   </div>
 </template>
 
-<script>
+<script setup>
 import Card from "./UI/Card.vue";
-export default {
-  components: { Card },
-  props: {
-    cards: {
-      type: Array,
-      default: () => [],
-    },
-  },
-};
+
+const props = defineProps({ cards: Array });
 </script>
 
 <style scoped>

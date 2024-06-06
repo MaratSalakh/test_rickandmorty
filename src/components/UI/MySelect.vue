@@ -7,24 +7,14 @@
   </select>
 </template>
 
-<script>
-export default {
-  name: "MySelect",
-  props: {
-    modelValue: {
-      type: String,
-    },
-    options: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  methods: {
-    changeOption(event) {
-      this.$emit("update:modelValue", event.target.value);
-    },
-  },
-};
+<script setup>
+const props = defineProps({ modelValue: String, options: Array });
+
+const emit = defineEmits(["update:modelValue"]);
+
+function changeOption(event) {
+  emit("update:modelValue", event.target.value);
+}
 </script>
 
 <style scoped></style>
