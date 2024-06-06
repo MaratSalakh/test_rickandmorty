@@ -11,11 +11,11 @@
     <div class="wrap_pagination">
       <div class="pagination">
         <div
-          class="pageItem"
-          :class="{ currentPage: page === currentPage }"
-          @click="changePage(page)"
-          :key="page"
           v-for="page in pages"
+          :key="page"
+          :class="{ currentPage: page === currentPage }"
+          class="pageItem"
+          @click="changePage(page)"
         >
           {{ page }}
         </div>
@@ -24,67 +24,59 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from "axios";
 import CardsGrid from "./components/CardsGrid.vue";
 import MySelect from "./components/UI/MySelect.vue";
+import { computed, onMounted, ref, watch } from "vue";
 
-export default {
-  components: { CardsGrid, MySelect },
-  data() {
-    return {
-      cards: [],
-      selectedSort: "",
-      sortOptions: [{ value: "name" }, { value: "status" }],
-      currentPage: 1,
-      pages: 1,
-      sorting: false,
+const cards = ref([]);
+const selectedSort = ref("");
+const sortOptions = [{ value: "name" }, { value: "status" }];
+const currentPage = ref(1);
+const pages = ref(1);
+const sorting = ref(false);
 
-    };
-  },
-  methods: {
-    async fetchCards() {
-      try {
-        const response = await axios.get(
-          "https://rickandmortyapi.com/api/character",
-          {
-            params: {
-              page: this.currentPage,
-            },
-          }
-        );
-        console.log(response.data);
-        this.cards = response.data.results;
-        this.pages = response.data.info.pages;
-        this.allPagesGroups = Math.ceil(response.data.info.pages / this.pagesGroupStep);
-      } catch (e) {
-        alert("My error");
+async function fetchCards() {
+  try {
+    const response = await axios.get(
+      "https://rickandmortyapi.com/api/character",
+      {
+        params: {
+          page: currentPage.value,
+        },
       }
-    },
-    changePage(page) {
-      this.currentPage = page;
-    },
-    sortingOn() {
-      this.sorting === true ? (this.selectedSort = "") : null;
-      this.sorting = !this.sorting;
-    },
-  },
-  mounted() {
-    this.fetchCards();
-  },
-  computed: {
-    sortedCards() {
-      return [...this.cards].sort((card1, card2) =>
-        card1[this.selectedSort]?.localeCompare(card2[this.selectedSort])
-      );
-    },
-  },
-  watch: {
-    currentPage() {
-      this.fetchCards();
-    },
-  },
-};
+    );
+    console.log(response.data);
+    cards.value = response.data.results;
+    pages.value = response.data.info.pages;
+  } catch (e) {
+    alert("My error");
+  }
+}
+
+function changePage(page) {
+  currentPage.value = page;
+}
+
+function sortingOn() {
+  sorting.value === true ? (selectedSort.value = "") : null;
+  sorting.value = !sorting.value;
+}
+
+onMounted(() => {
+  fetchCards();
+});
+
+const sortedCards = computed(() =>
+  [...cards.value].sort((card1, card2) => {
+    return card1[selectedSort.value]?.localeCompare(card2[selectedSort.value]);
+  })
+);
+
+watch(currentPage, () => {
+  fetchCards();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -101,10 +93,12 @@ export default {
   padding: 20px;
   width: 50vw;
 }
+
 .wrap_pagination {
   display: flex;
   justify-content: center;
 }
+
 .pageItem {
   display: flex;
   align-items: center;
@@ -114,6 +108,7 @@ export default {
   border: 1px solid rgb(158, 158, 158);
   cursor: pointer;
 }
+
 .currentPage {
   background-color: white;
 }
@@ -127,6 +122,7 @@ export default {
 .redButton {
   background-color: red;
 }
+
 .greenButton {
   background-color: green;
 }
